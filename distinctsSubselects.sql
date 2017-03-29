@@ -32,7 +32,7 @@ on
 where
     project.name = 'Personal Website';
 
--- Perform a left outer join from the tech table to the project_uses_tech table - which techs has no associated project?
+-- Perform a left outer join from the tech table to the project_uses_tech table which techs has no associated project?
 select
     *
 from
@@ -46,26 +46,53 @@ where
 is
     null;
 
--- Based on the previous query, get the count of the number of techs used by each project.
+-- Based on the previous query, get the count of the number of projects that use each tech.
 *************difficult*************
-select count(distinct tech.id) from tech left outer join project_uses_tech on tech.id = project_uses_tech.project_id where tech.id = project_uses_tech.project_id;
+select
+    count(tech.id)
+from
+    tech
+left outer join
+    project_uses_tech
+on
+    tech.id = project_uses_tech.tech_id
+-- where
+--     tech.id = project_uses_tech.project_id;
+group by
+    tech.id
+order by
+    tech.name;
+
 
 -- Perform a left outer join from the project table to the project_users_tech table - which projects has no associated tech?
 select
     project.name, tech.name
 from
     project
-left outer join
+left join
     project_uses_tech
 on
     project_uses_tech.project_id = project.id
-left outer join
+left join
     tech
 on
     project_uses_tech.project_id = tech.id;
 
--- Based on the previous query, get the count of the number of projects that use each tech.
+-- Based on the previous query, get the count of the number of techs used by each project.
 *************difficult*************
+select
+    count(project.id)
+from
+    project
+left join
+    project_uses_tech
+on
+    project_uses_tech.project_id = project.id
+left join
+    tech
+on
+    project_uses_tech.project_id = tech.id;
+group by 
 -- List all projects along with each technology used by it. You will need to do a three-way join.
 select
     project.name, tech.name
@@ -172,3 +199,4 @@ order by
 count(project_uses_tech.project_id);
 
 -- What is the average number of techs used by a project?
+**********difficult***********
