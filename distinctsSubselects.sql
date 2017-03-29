@@ -3,9 +3,9 @@
 
 
 
--- Based on the previous query, get the count of the number of techs used by each project.
--- Perform a left outer join from the project table to the project_users_tech table - which projects has no associated tech?
--- Based on the previous query, get the count of the number of projects that use each tech.
+
+
+
 -- List all projects along with each technology used by it. You will need to do a three-way join.
 -- List all the distinct techs that are used by at least one project.
 -- List all the distinct techs that are not used by any projects.
@@ -15,7 +15,7 @@
 -- Order the tech by how many projects use it.
 -- What is the average number of techs used by a project?
 
--- What are all projects that use JavaScript?
+-- What are all projects that use CSS?
 select
     project.name, tech.name
 from
@@ -62,3 +62,23 @@ is
     null;
 
 -- Based on the previous query, get the count of the number of techs used by each project.
+*************difficult*************
+select count(distinct tech.id) from tech left outer join project_uses_tech on tech.id = project_uses_tech.project_id where tech.id = project_uses_tech.project_id;
+
+-- Perform a left outer join from the project table to the project_users_tech table - which projects has no associated tech?
+select
+    project.name, tech.name
+from
+    project
+left outer join
+    project_uses_tech
+on
+    project_uses_tech.project_id = project.id
+left outer join
+    tech
+on
+    project_uses_tech.project_id = tech.id;
+
+-- Based on the previous query, get the count of the number of projects that use each tech.
+*************difficult*************
+-- List all projects along with each technology used by it. You will need to do a three-way join.
