@@ -47,21 +47,20 @@ is
     null;
 
 -- Based on the previous query, get the count of the number of projects that use each tech.
-*************difficult*************
+
 select
-    count(tech.id)
+    project.*,
+    count(project_uses_tech)
 from
-    tech
+    project
 left outer join
     project_uses_tech
 on
-    tech.id = project_uses_tech.tech_id
+    project_uses_tech.project_id = project.id
 -- where
 --     tech.id = project_uses_tech.project_id;
 group by
-    tech.id
-order by
-    tech.name;
+    project.id
 
 
 -- Perform a left outer join from the project table to the project_users_tech table - which projects has no associated tech?
@@ -79,20 +78,19 @@ on
     project_uses_tech.project_id = tech.id;
 
 -- Based on the previous query, get the count of the number of techs used by each project.
-*************difficult*************
+
 select
-    count(project.id)
+    name,
+    count(tech_id)
 from
-    project
+    tech
 left join
     project_uses_tech
 on
-    project_uses_tech.project_id = project.id
-left join
-    tech
-on
-    project_uses_tech.project_id = tech.id;
-group by 
+    project_uses_tech.tech_id = tech.id
+
+group by
+    tech.id;
 -- List all projects along with each technology used by it. You will need to do a three-way join.
 select
     project.name, tech.name
@@ -102,6 +100,20 @@ where
     project_uses_tech.tech_id = tech.id
 and
     project_uses_tech.project_id = project.id;
+
+--OR
+select
+    *
+from
+    project
+left join
+    project_uses_tech
+on
+    project_uses_tech.project_id = project.id
+left join
+    tech
+on
+    project_uses_tech.tech_id = tech.id;
 
 -- List all the distinct techs that are used by at least one project.
 select distinct
@@ -116,8 +128,7 @@ and
 
 -- List all the distinct techs that are not used by any projects.
 select distinct
-on(tech.name)
-    tech.name
+(tech.name)
 from
     tech
 left outer join
@@ -163,11 +174,11 @@ is null;
 
 -- Order the projects by how many tech it uses.
 select
-    project.name,
+    project.*,
 count(project_uses_tech.tech_id)
 from
     tech
-left outer join
+left join
     project_uses_tech
 on
     tech.id = project_uses_tech.tech_id
