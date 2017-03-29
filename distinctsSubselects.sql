@@ -1,20 +1,5 @@
 -- Write queries to find the answers below:
 
-
-
-
-
-
-
--- List all projects along with each technology used by it. You will need to do a three-way join.
--- List all the distinct techs that are used by at least one project.
--- List all the distinct techs that are not used by any projects.
--- List all the distinct projects that use at least one tech.
--- List all the distinct projects that use no tech.
--- Order the projects by how many tech it uses.
--- Order the tech by how many projects use it.
--- What is the average number of techs used by a project?
-
 -- What are all projects that use CSS?
 select
     project.name, tech.name
@@ -82,3 +67,108 @@ on
 -- Based on the previous query, get the count of the number of projects that use each tech.
 *************difficult*************
 -- List all projects along with each technology used by it. You will need to do a three-way join.
+select
+    project.name, tech.name
+from
+    project, project_uses_tech, tech
+where
+    project_uses_tech.tech_id = tech.id
+and
+    project_uses_tech.project_id = project.id;
+
+-- List all the distinct techs that are used by at least one project.
+select distinct
+on(tech.name)
+    tech.name
+from
+    project, project_uses_tech, tech
+where
+    project_uses_tech.tech_id = tech.id
+and
+    project_uses_tech.project_id = project.id;
+
+-- List all the distinct techs that are not used by any projects.
+select distinct
+on(tech.name)
+    tech.name
+from
+    tech
+left outer join
+    project_uses_tech
+on
+    project_uses_tech.tech_id = tech.id
+left outer join
+    project
+on
+    project_uses_tech.project_id = project.id
+where
+    project.name
+is null;
+
+-- List all the distinct projects that use at least one tech.
+select distinct
+on
+    (project.name) project.name
+from
+    project, project_uses_tech, tech
+where
+    project_uses_tech.tech_id = tech.id
+and
+    project_uses_tech.project_id = project.id;
+
+-- List all the distinct projects that use no tech.
+select distinct
+on(project.name)
+    project.name
+from
+    project
+left outer join
+    project_uses_tech
+on
+    project_uses_tech.project_id = project.id
+left outer join
+    tech
+on
+    project_uses_tech.tech_id = tech.id
+where
+    tech.name
+is null;
+
+-- Order the projects by how many tech it uses.
+select
+    project.name,
+count(project_uses_tech.tech_id)
+from
+    tech
+left outer join
+    project_uses_tech
+on
+    tech.id = project_uses_tech.tech_id
+inner join
+    project
+on
+    project.id = project_uses_tech.project_id
+group by
+    project.name
+order by count(project_uses_tech.tech_id);
+
+-- Order the tech by how many projects use it.
+select
+    tech.name,
+count(project_uses_tech.project_id)
+from
+    project
+left outer join
+    project_uses_tech
+on
+    project.id = project_uses_tech.project_id
+inner join
+    tech
+on
+    tech.id = project_uses_tech.tech_id
+group by
+    tech.name
+order by
+count(project_uses_tech.project_id);
+
+-- What is the average number of techs used by a project?
