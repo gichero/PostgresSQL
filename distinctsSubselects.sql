@@ -211,3 +211,9 @@ count(project_uses_tech.project_id);
 
 -- What is the average number of techs used by a project?
 **********difficult***********
+SELECT
+project.id,
+project.name, count(project_uses_tech.tech.id) as tech_count
+from
+project
+left join
